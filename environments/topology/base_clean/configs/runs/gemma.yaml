@@ -1,0 +1,4 @@
+extends: ../default.yaml
+
+model:
+  profile_path: configs/models/gemma7b_it.yaml

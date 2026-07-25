@@ -1,0 +1,31 @@
+extends: ./llama_clamber_pca16_9way_nodist.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama_clamber_topology_surrogate
+
+clamber_topology_surrogate:
+  output_dir: artifacts/reports/clamber_topology_surrogate
+  layers: [14]
+  device: auto
+  token_hidden_dim: 128
+  head_hidden_dim: 256
+  dropout: 0.1
+  include_token_count_input: true
+  train_batch_size: 64
+  eval_batch_size: 128
+  lr: 0.001
+  weight_decay: 0.0001
+  max_epochs: 50
+  patience: 8
+  grad_clip_norm: 1.0
+  val_fraction: 0.2
+  loss: huber
+  huber_beta: 1.0
+  force_rebuild_token_cloud_forward_cache: false
+  force_rebuild_token_cloud_features: false
+  token_cloud_forward_cache_path: artifacts/reports/clamber_topology_surrogate/meta_llama_llama_3_1_8b_instruct/clamber_token_cloud_reduced_clouds.joblib
+  token_cloud_feature_cache_path: artifacts/reports/clamber_topology_surrogate/meta_llama_llama_3_1_8b_instruct/clamber_token_cloud_all_layer_features.parquet
+  layer_metrics_filename: clamber_topology_surrogate_layer_metrics.parquet
+  feature_metrics_filename: clamber_topology_surrogate_feature_metrics.parquet
+  summary_filename: clamber_topology_surrogate_summary.md
+  metadata_filename: clamber_topology_surrogate_metadata.json

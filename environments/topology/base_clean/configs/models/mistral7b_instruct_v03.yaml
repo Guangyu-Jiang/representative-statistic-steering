@@ -1,0 +1,8 @@
+name: mistralai/Mistral-7B-Instruct-v0.3
+tokenizer_name: mistralai/Mistral-7B-Instruct-v0.3
+trust_remote_code: false
+torch_dtype: bfloat16
+device: auto
+local_files_only: true
+use_fast: false
+model_class: causal_lm

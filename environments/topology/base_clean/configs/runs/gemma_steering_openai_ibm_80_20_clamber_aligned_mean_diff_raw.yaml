@@ -1,0 +1,8 @@
+extends: ./gemma_steering_openai_ibm_80_20_clamber_aligned.yaml
+
+runtime:
+  log_dir: artifacts/logs/gemma_steering_openai_ibm_80_20_clamber_aligned_mean_diff_raw
+
+steering:
+  artifact_dir: artifacts/steering_openai_ibm_80_20_clamber_aligned_mean_diff_raw
+  direction_method: mean_diff_raw

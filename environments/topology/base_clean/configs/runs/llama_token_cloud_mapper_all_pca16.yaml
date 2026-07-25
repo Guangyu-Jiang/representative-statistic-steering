@@ -1,0 +1,44 @@
+extends: ../default.yaml
+
+model:
+  profile_path: configs/models/llama31_8b_instruct.yaml
+
+token_cloud_mapper_classifier:
+  enabled: true
+  output_dir: artifacts/token_cloud_mapper_classifier_pca16
+  datasets: [ambigqa, situatedqa]
+  text_column: text
+  use_chat_template: false
+  system_prompt: null
+  batch_size: 8
+  max_length: 64
+  parallel_jobs: 12
+  candidate_layers: [0, 14, 31]
+  layer_selection_strategy: evenly_spaced
+  max_candidate_layers: 3
+  drop_special_tokens: true
+  pca_fit_token_cap: 16000
+  pca_components: 16
+  pca_whiten: false
+  topology_components: 16
+  val_fraction: 0.2
+  multilayer_enabled: true
+  multilayer_top_k: 2
+  mapper_lenses: [z_0, radius]
+  mapper_n_intervals: [4, 6]
+  mapper_overlaps: [0.3, 0.5]
+  mapper_dbscan_eps: 0.6
+  mapper_min_samples: 2
+  classifier:
+    penalty: l2
+    solver: liblinear
+    C: 1.0
+    class_weight: balanced
+    max_iter: 4000
+    standardize: true
+  feature_table_filename: token_cloud_mapper_features.parquet
+  candidate_metrics_filename: token_cloud_mapper_candidate_metrics.parquet
+  final_metrics_filename: token_cloud_mapper_final_metrics.parquet
+  selected_candidates_filename: token_cloud_mapper_selected_candidates.parquet
+  report_filename: token_cloud_mapper_summary.md
+  metadata_filename: token_cloud_mapper_metadata.json

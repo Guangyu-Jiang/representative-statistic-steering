@@ -1,0 +1,48 @@
+extends: ./llama.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama_binary_h0_mean_persistence_alllayers
+
+extraction:
+  datasets: [ambigqa, situatedqa]
+  layers: [14]
+  readouts: [mean_pool]
+  use_chat_template: false
+  max_length: 64
+  batch_size: 8
+  cache_dir: artifacts/hidden_states_binary_h0_mean_persistence
+
+probe:
+  artifact_dir: artifacts/probes_binary_h0_mean_persistence
+
+reports:
+  output_dir: artifacts/reports/binary_h0_mean_persistence
+  summary_path: artifacts/reports/binary_h0_mean_persistence/llama_summary.md
+
+token_cloud_topology_classifier:
+  enabled: true
+  output_dir: artifacts/token_cloud_topology_classifier_binary_h0_mean_persistence_alllayers
+  datasets: [ambigqa, situatedqa]
+  text_column: text
+  use_chat_template: false
+  system_prompt: null
+  batch_size: 32
+  max_length: 64
+  parallel_jobs: 16
+  candidate_layers: all
+  layer_selection_strategy: all
+  drop_special_tokens: true
+  pca_fit_token_cap: 16000
+  pca_components: 16
+  pca_whiten: false
+  topology_components: 16
+  distance_feature_mode: none
+  distance_metric: euclidean
+  betti_grid_size: 24
+  persistence_image_grid_side: 3
+  maxdim: 1
+  coeff: 2
+  val_fraction: 0.2
+  multilayer_enabled: true
+  multilayer_top_k: 2
+  visualization_enabled: false

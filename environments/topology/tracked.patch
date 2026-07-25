@@ -1,0 +1,194 @@
+diff --git a/src/aen_replication/data/contrastive_pairs.py b/src/aen_replication/data/contrastive_pairs.py
+index 38d7ce3..39fa338 100644
+--- a/src/aen_replication/data/contrastive_pairs.py
++++ b/src/aen_replication/data/contrastive_pairs.py
+@@ -31,12 +31,29 @@ def _assign_train_test(df: pd.DataFrame, train_pairs: int, test_pairs: int, seed
+     return out.reset_index(drop=True)
+ 
+ 
++def _assign_train_test_fraction(df: pd.DataFrame, train_fraction: float, seed: int) -> pd.DataFrame:
++    """Assign every pair to train/test using a deterministic fraction split."""
++
++    if not 0.0 < train_fraction < 1.0:
++        raise ValueError(f"train_fraction must be between 0 and 1, got {train_fraction}")
++    pair_ids = df["pair_id"].drop_duplicates().tolist()
++    if len(pair_ids) < 2:
++        raise ValueError(f"Need at least 2 pairs for a fraction split, found {len(pair_ids)}")
++
++    rng = random.Random(seed)
++    rng.shuffle(pair_ids)
++    train_count = int(round(len(pair_ids) * train_fraction))
++    train_count = min(max(train_count, 1), len(pair_ids) - 1)
++    train_set = set(pair_ids[:train_count])
++    out = df.copy()
++    out["split"] = out["pair_id"].map(lambda pair_id: "train" if pair_id in train_set else "test")
++    return out.reset_index(drop=True)
++
++
+ def prepare_all_datasets(config: dict) -> dict[str, pd.DataFrame]:
+     """Build paper-style AmbigQA and SituatedQA train/test pair tables."""
+ 
+     split_cfg = config["data"]["split"]
+-    train_pairs = int(split_cfg["train_pairs"])
+-    test_pairs = int(split_cfg["test_pairs"])
+     seed = int(config["seed"])
+     selection_strategy = str(config["data"].get("clear_selection", "random_seeded"))
+ 
+@@ -46,7 +63,13 @@ def prepare_all_datasets(config: dict) -> dict[str, pd.DataFrame]:
+         seed=seed,
+         selection_strategy=selection_strategy,
+     )
+-    ambigqa_df = _assign_train_test(ambigqa_df, train_pairs=train_pairs, test_pairs=test_pairs, seed=seed)
++    if "train_fraction" in split_cfg:
++        train_fraction = float(split_cfg["train_fraction"])
++        ambigqa_df = _assign_train_test_fraction(ambigqa_df, train_fraction=train_fraction, seed=seed)
++    else:
++        train_pairs = int(split_cfg["train_pairs"])
++        test_pairs = int(split_cfg["test_pairs"])
++        ambigqa_df = _assign_train_test(ambigqa_df, train_pairs=train_pairs, test_pairs=test_pairs, seed=seed)
+ 
+     situatedqa_df = build_situatedqa_pairs(
+         temp_paths=list(config["data"]["situatedqa"]["temp_paths"]),
+@@ -54,12 +77,15 @@ def prepare_all_datasets(config: dict) -> dict[str, pd.DataFrame]:
+         seed=seed,
+         selection_strategy=selection_strategy,
+     )
+-    situatedqa_df = _assign_train_test(
+-        situatedqa_df,
+-        train_pairs=train_pairs,
+-        test_pairs=test_pairs,
+-        seed=seed,
+-    )
++    if "train_fraction" in split_cfg:
++        situatedqa_df = _assign_train_test_fraction(situatedqa_df, train_fraction=train_fraction, seed=seed)
++    else:
++        situatedqa_df = _assign_train_test(
++            situatedqa_df,
++            train_pairs=train_pairs,
++            test_pairs=test_pairs,
++            seed=seed,
++        )
+ 
+     return {
+         "ambigqa": coerce_pairs(ambigqa_df),
+diff --git a/src/aen_replication/eval/clamber_topology_extensions.py b/src/aen_replication/eval/clamber_topology_extensions.py
+index fc9f505..c8ed6bb 100644
+--- a/src/aen_replication/eval/clamber_topology_extensions.py
++++ b/src/aen_replication/eval/clamber_topology_extensions.py
+@@ -290,7 +290,8 @@ def _diagram_descriptors(diagram: np.ndarray, *, prefix: str, grid_size: int) ->
+     max_death = float(max(np.max(finite[:, 1]), 1e-6))
+     grid = np.linspace(0.0, max_death, grid_size)
+     betti = _betti_curve(finite, grid)
+-    betti_auc = float(getattr(np, "trapezoid", np.trapz)(betti, grid))
++    trapezoid = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
++    betti_auc = float(trapezoid(betti, grid))
+     result = {
+         f"{prefix}_feature_count": float(len(lifetimes)),
+         f"{prefix}_total_persistence_norm": float(lifetimes.sum() / max_death),
+diff --git a/src/aen_replication/eval/judge.py b/src/aen_replication/eval/judge.py
+index cbfec2d..a51f374 100644
+--- a/src/aen_replication/eval/judge.py
++++ b/src/aen_replication/eval/judge.py
+@@ -42,12 +42,13 @@ class JudgeResult:
+ 
+ def _parse_label(raw_text: str) -> str:
+     upper = raw_text.upper()
+-    for candidate in ("ACCEPTABLE", "UNACCEPTABLE", "NEITHER"):
+-        if f"<LABEL>{candidate}</LABEL>" in upper:
+-            return candidate
+-    for candidate in ("ACCEPTABLE", "UNACCEPTABLE", "NEITHER"):
+-        if candidate in upper:
+-            return candidate
++    labels = "GROUNDED_ACCEPTABLE|GENERIC_ACCEPTABLE|UNACCEPTABLE|ACCEPTABLE|NEITHER"
++    tag_match = re.search(rf"<\s*LABEL\s*>\s*({labels})\s*<\s*/\s*LABEL\s*>", upper)
++    if tag_match:
++        return tag_match.group(1)
++    label_match = re.search(rf"\b({labels})\b", upper)
++    if label_match:
++        return label_match.group(1)
+     return "NEITHER"
+ 
+ 
+@@ -192,9 +193,13 @@ class LocalLLMJudge:
+                     pad_token_id=self.tokenizer.pad_token_id,
+                     eos_token_id=self.tokenizer.eos_token_id,
+                 )
+-            input_lengths = encoded["attention_mask"].sum(dim=1).tolist()
++            # ``generate`` appends tokens after the common padded input width.
++            # Slicing at each unpadded length leaks trailing prompt tokens for
++            # shorter left-padded examples and can make the label parser read a
++            # class name from the prompt instead of the generated answer.
++            generation_start = int(encoded["input_ids"].shape[1])
+             for index, prompt in enumerate(prompt_batch):
+-                generated = output[index, int(input_lengths[index]) :]
++                generated = output[index, generation_start:]
+                 text = self.tokenizer.decode(generated, skip_special_tokens=True).strip()
+                 results.append(
+                     JudgeResult(
+diff --git a/src/aen_replication/features/ph_descriptors.py b/src/aen_replication/features/ph_descriptors.py
+index 8a10098..65cb5a1 100644
+--- a/src/aen_replication/features/ph_descriptors.py
++++ b/src/aen_replication/features/ph_descriptors.py
+@@ -78,7 +78,8 @@ def _build_descriptor_tables(
+         diagram = group_df.loc[:, ["birth", "death"]].to_numpy(dtype=float)
+         lifetimes = group_df["lifetime"].to_numpy(dtype=float)
+         betti = _betti_curve(diagram, grid)
+-        betti_auc = float(getattr(np, "trapezoid", np.trapz)(betti, grid))
++        trapezoid = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
++        betti_auc = float(trapezoid(betti, grid))
+         betti_auc_norm = float(betti_auc / max(max_death, 1e-6))
+         descriptor_rows.append(
+             {
+diff --git a/src/aen_replication/train/independent_topology_classifier.py b/src/aen_replication/train/independent_topology_classifier.py
+index b841006..4c25713 100644
+--- a/src/aen_replication/train/independent_topology_classifier.py
++++ b/src/aen_replication/train/independent_topology_classifier.py
+@@ -159,7 +159,8 @@ def _diagram_descriptors(diagram: np.ndarray, *, prefix: str, grid_size: int) ->
+     max_death = float(max(np.max(finite[:, 1]), 1e-6))
+     grid = np.linspace(0.0, max_death, grid_size)
+     betti = _betti_curve(finite, grid)
+-    betti_auc = float(getattr(np, "trapezoid", np.trapz)(betti, grid))
++    trapezoid = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
++    betti_auc = float(trapezoid(betti, grid))
+     result = {
+         f"{prefix}_feature_count": float(len(lifetimes)),
+         f"{prefix}_total_persistence_norm": float(lifetimes.sum() / max_death),
+diff --git a/src/aen_replication/train/steering.py b/src/aen_replication/train/steering.py
+index 6fd93b6..f64b80b 100644
+--- a/src/aen_replication/train/steering.py
++++ b/src/aen_replication/train/steering.py
+@@ -82,6 +82,7 @@ def _extract_prompt_vectors(
+     prompts: list[str],
+     extraction_cfg: dict[str, Any],
+     layer: int,
++    readout: str = "mean_pool",
+ ) -> np.ndarray:
+     extractor = HiddenStateExtractor(
+         bundle=bundle,
+@@ -93,10 +94,10 @@ def _extract_prompt_vectors(
+     vectors = extractor.extract(
+         df=df,
+         layers=[layer],
+-        readouts=["mean_pool"],
++        readouts=[readout],
+         text_column="prompt_text",
+     )
+-    return vectors[(layer, "mean_pool")]
++    return vectors[(layer, readout)]
+ 
+ 
+ def _paired_vectors(
+diff --git a/src/aen_replication/train/topology_classifier.py b/src/aen_replication/train/topology_classifier.py
+index a4222bb..71d94e1 100644
+--- a/src/aen_replication/train/topology_classifier.py
++++ b/src/aen_replication/train/topology_classifier.py
+@@ -101,7 +101,8 @@ def _diagram_descriptors(diagram: np.ndarray, *, prefix: str, grid_size: int) ->
+     max_death = float(max(np.max(finite[:, 1]), 1e-6))
+     grid = np.linspace(0.0, max_death, grid_size)
+     betti = _betti_curve(finite, grid)
+-    betti_auc = float(getattr(np, "trapezoid", np.trapz)(betti, grid))
++    trapezoid = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
++    betti_auc = float(trapezoid(betti, grid))
+     return {
+         f"{prefix}_feature_count": float(len(lifetimes)),
+         f"{prefix}_total_persistence_norm": float(lifetimes.sum() / max_death),

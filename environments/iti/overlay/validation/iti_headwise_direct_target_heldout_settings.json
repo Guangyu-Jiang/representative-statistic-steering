@@ -1,0 +1,9 @@
+[
+  {
+    "method": "headwise_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 1.0,
+    "ridge_ratio": 0.0
+  }
+]

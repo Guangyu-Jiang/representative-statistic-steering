@@ -1,0 +1,18 @@
+[
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  }
+]

@@ -1,0 +1,13 @@
+extends: ./mistral_clamber_pca16_9way.yaml
+
+runtime:
+  log_dir: artifacts/logs/mistral_clamber_pca16_9way_knnsubclass
+
+token_cloud_topology_classifier:
+  output_dir: artifacts/token_cloud_topology_classifier_clamber_pca16_9way_knnsubclass
+
+clamber_subclass_classification:
+  output_dir: artifacts/clamber_subclass_classification_9way_knnsubclass
+  token_cloud_distance_feature_mode: knn_subclass
+  token_cloud_subclass_distance_executor: thread
+  token_cloud_subclass_distance_max_workers: 12

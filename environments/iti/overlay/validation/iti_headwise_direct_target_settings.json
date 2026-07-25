@@ -1,0 +1,72 @@
+[
+  {
+    "method": "headwise_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.99,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_min_norm",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_min_norm",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_min_norm",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_min_norm",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "headwise_probe_min_norm",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.99,
+    "ridge_ratio": 0.0
+  }
+]

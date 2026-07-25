@@ -1,0 +1,4 @@
+extends: ../default.yaml
+
+model:
+  profile_path: configs/models/llama31_8b_instruct.yaml

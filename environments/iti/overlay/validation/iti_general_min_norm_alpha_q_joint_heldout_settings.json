@@ -1,0 +1,34 @@
+[
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 30.0,
+    "target_quantile": 0.55,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 26.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 24.0,
+    "target_quantile": 0.65,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 28.0,
+    "target_quantile": 0.55,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  }
+]

@@ -1,0 +1,29 @@
+extends: ./llama_clamber_topology_surrogate.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama_clamber_topology_surrogate_h0_pca100
+
+token_cloud_topology_classifier:
+  pca_fit_token_cap: 32000
+  pca_components: 100
+  topology_components: 100
+  maxdim: 0
+
+clamber_subclass_classification:
+  token_cloud_candidate_layers: [14]
+  token_cloud_pca_components: 100
+  token_cloud_topology_components: 100
+  token_cloud_distance_feature_mode: none
+
+clamber_topology_surrogate:
+  output_dir: artifacts/reports/clamber_topology_surrogate_h0_pca100
+  layers: [14]
+  target_columns: [h0_mean_persistence]
+  token_hidden_dim: 192
+  head_hidden_dim: 256
+  max_epochs: 60
+  patience: 10
+  force_rebuild_token_cloud_forward_cache: false
+  force_rebuild_token_cloud_features: false
+  token_cloud_forward_cache_path: artifacts/reports/clamber_topology_surrogate_h0_pca100/meta_llama_Llama_3.1_8B_Instruct/clamber_token_cloud_reduced_clouds.joblib
+  token_cloud_feature_cache_path: artifacts/reports/clamber_topology_surrogate_h0_pca100/meta_llama_Llama_3.1_8B_Instruct/clamber_token_cloud_all_layer_features.parquet

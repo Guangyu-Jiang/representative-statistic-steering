@@ -1,0 +1,10 @@
+[
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 3.0
+  }
+]

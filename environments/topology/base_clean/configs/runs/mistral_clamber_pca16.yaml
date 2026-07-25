@@ -1,0 +1,71 @@
+extends: ../default.yaml
+
+model:
+  profile_path: configs/models/mistral7b_instruct_v03.yaml
+
+data:
+  clamber:
+    source_path: data/raw/clamber/clamber_benchmark.jsonl
+    train_fraction: 0.8
+
+extraction:
+  datasets: [clamber]
+  layers: [0, 4, 8, 12, 14, 16, 20, 24, 28, 31]
+
+token_cloud_topology_classifier:
+  enabled: true
+  output_dir: artifacts/token_cloud_topology_classifier_clamber_pca16
+  datasets: [clamber]
+  text_column: text
+  use_chat_template: false
+  system_prompt: null
+  batch_size: 8
+  max_length: 64
+  parallel_jobs: 12
+  candidate_layers: [0, 14, 31]
+  layer_selection_strategy: evenly_spaced
+  max_candidate_layers: 3
+  drop_special_tokens: true
+  pca_fit_token_cap: 16000
+  pca_components: 16
+  pca_whiten: false
+  topology_components: 16
+  prototype_token_cap: 192
+  distance_metric: euclidean
+  betti_grid_size: 24
+  persistence_image_grid_side: 3
+  maxdim: 1
+  coeff: 2
+  val_fraction: 0.2
+  multilayer_enabled: true
+  multilayer_top_k: 2
+
+clamber_detection:
+  dataset: clamber
+  output_dir: artifacts/clamber_detection
+  layerwise_filename: clamber_layerwise.csv
+  subclass_metrics_filename: clamber_subclass_metrics.parquet
+  summary_json_filename: clamber_detection_summary.json
+  report_filename: clamber_detection_summary.md
+
+clamber_subclass_classification:
+  output_dir: artifacts/clamber_subclass_classification
+  candidate_layers: [0, 4, 8, 12, 14, 16, 20, 24, 28, 31]
+  token_cloud_candidate_layers: [0, 14, 31]
+  ambiguous_only: false
+  include_none_class: true
+  val_fraction: 0.2
+  perturb_top_k: [1, 2, 3, 5, 10, 20]
+  perturb_sigma: 0.15
+  perturb_trials: 8
+  max_iter: 4000
+  token_cloud_max_length: 64
+  token_cloud_batch_size: 8
+  token_cloud_parallel_jobs: 12
+  token_cloud_pca_components: 16
+  token_cloud_topology_components: 16
+  token_cloud_prototype_token_cap: 192
+  token_cloud_betti_grid_size: 24
+  token_cloud_persistence_image_grid_side: 3
+  token_cloud_neighborhood_k: 24
+  token_cloud_classifier_C: 1.0

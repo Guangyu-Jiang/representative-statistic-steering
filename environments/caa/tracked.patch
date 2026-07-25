@@ -1,0 +1,18 @@
+diff --git a/README.md b/README.md
+index 33ec270e..268d2cba 100644
+--- a/README.md
++++ b/README.md
+@@ -132,6 +132,13 @@ pytest
+ 
+ TODO: add more unit tests
+ 
++## Target-conditioned perturbation extension
++
++The local, API-free replication and target-conditioned steering experiments are
++documented in [`caa_perturbation/README.md`](caa_perturbation/README.md). The
++extension is separate from the original scripts so the released CAA code and
++artifacts remain unchanged.
++
+ ## Intermediate layer decoding / steering vector dot product experiments
+ 
+ See `/activation_steering_interp.ipynb`

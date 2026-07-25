@@ -1,0 +1,18 @@
+[submodule "external/PPLM"]
+	path = external/PPLM
+	url = https://github.com/uber-research/PPLM.git
+[submodule "external/TruthX"]
+	path = external/TruthX
+	url = https://github.com/ictnlp/TruthX.git
+[submodule "external/Lookback-Lens"]
+	path = external/Lookback-Lens
+	url = https://github.com/voidism/Lookback-Lens.git
+[submodule "external/ReDEeP-ICLR"]
+	path = external/ReDEeP-ICLR
+	url = https://github.com/Jeryi-Sun/ReDEeP-ICLR.git
+[submodule "external/honest_llama"]
+	path = external/honest_llama
+	url = https://github.com/likenneth/honest_llama.git
+[submodule "external/TruthfulQA"]
+	path = external/TruthfulQA
+	url = https://github.com/sylinrl/TruthfulQA.git

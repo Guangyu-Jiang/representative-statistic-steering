@@ -1,0 +1,7 @@
+extends: ./llama.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama31_steering_exact
+
+judge:
+  batch_size: 4

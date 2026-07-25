@@ -1,0 +1,4 @@
+extends: ./mistral_clamber_pca16.yaml
+
+extraction:
+  readouts: [last_token]

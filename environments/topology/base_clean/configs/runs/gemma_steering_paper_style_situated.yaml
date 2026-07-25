@@ -1,0 +1,8 @@
+extends: ./gemma_steering_paper_style.yaml
+
+runtime:
+  log_dir: artifacts/logs/gemma_steering_paper_style_situated
+
+steering:
+  artifact_dir: artifacts/steering_paper_style_situated
+  datasets: [situatedqa]

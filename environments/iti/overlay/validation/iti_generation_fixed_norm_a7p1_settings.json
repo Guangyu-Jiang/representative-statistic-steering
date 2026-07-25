@@ -1,0 +1,7 @@
+[
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 7.1
+  }
+]

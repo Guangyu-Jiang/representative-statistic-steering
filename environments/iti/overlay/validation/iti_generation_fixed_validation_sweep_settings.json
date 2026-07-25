@@ -1,0 +1,17 @@
+[
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 6.0
+  },
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 8.0
+  },
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 10.0
+  }
+]

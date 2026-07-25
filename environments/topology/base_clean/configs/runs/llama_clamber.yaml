@@ -1,0 +1,26 @@
+extends: ../default.yaml
+
+model:
+  profile_path: configs/models/llama31_8b_instruct.yaml
+
+data:
+  clamber:
+    source_path: data/raw/clamber/clamber_benchmark.jsonl
+    train_fraction: 0.8
+
+extraction:
+  datasets: [clamber]
+  layers: [0, 4, 8, 12, 14, 16, 20, 24, 28, 31]
+
+independent_topology_classifier:
+  datasets: [clamber]
+  candidate_layers: [0, 4, 8, 12, 14, 16, 20, 24, 28, 31]
+  max_candidate_layers: 10
+
+clamber_detection:
+  dataset: clamber
+  output_dir: artifacts/clamber_detection
+  layerwise_filename: clamber_layerwise.csv
+  subclass_metrics_filename: clamber_subclass_metrics.parquet
+  summary_json_filename: clamber_detection_summary.json
+  report_filename: clamber_detection_summary.md

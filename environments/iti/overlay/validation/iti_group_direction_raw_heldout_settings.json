@@ -1,0 +1,18 @@
+[
+  {
+    "method": "group_direction_probe_iti",
+    "num_heads": 48,
+    "alpha": 4.0,
+    "target_quantile": 0.99,
+    "ridge_ratio": 0.0,
+    "probe_score_normalization": "raw"
+  },
+  {
+    "method": "group_direction_probe_min_norm",
+    "num_heads": 48,
+    "alpha": 4.0,
+    "target_quantile": 1.0,
+    "ridge_ratio": 0.0,
+    "probe_score_normalization": "raw"
+  }
+]

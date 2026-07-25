@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sparse-neurons-ambiguity-replication"
+version = "0.1.0"
+description = "Replication of sparse-neuron ambiguity experiments in LLMs"
+requires-python = ">=3.11"
+dependencies = [
+  "datasets",
+  "joblib",
+  "matplotlib",
+  "numpy",
+  "pandas",
+  "persim",
+  "pyarrow",
+  "pypdf",
+  "pyyaml",
+  "ripser",
+  "scikit-learn",
+  "scipy",
+  "sentencepiece",
+  "protobuf",
+  "torch",
+  "transformers",
+  "tqdm",
+  "pytest",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+prepare_paper_data = "aen_replication.pipelines.prepare_data:main"
+extract_paper_hidden_states = "aen_replication.pipelines.extract_hidden_states:main"
+train_paper_detection = "aen_replication.pipelines.train_detection:main"
+run_paper_prompt_baselines = "aen_replication.pipelines.run_prompt_baselines:main"
+run_paper_steering = "aen_replication.pipelines.run_steering:main"
+generate_paper_audit = "aen_replication.pipelines.generate_paper_audit:main"
+evaluate_triviaqa = "aen_replication.pipelines.evaluate_triviaqa:main"
+run_persistent_homology = "aen_replication.pipelines.run_persistent_homology:main"
+run_focused_persistent_homology = "aen_replication.pipelines.run_focused_persistent_homology:main"
+run_ph_visualizations = "aen_replication.pipelines.run_ph_visualizations:main"
+run_ph_descriptors = "aen_replication.pipelines.run_ph_descriptors:main"
+run_mapper_analysis = "aen_replication.pipelines.run_mapper_analysis:main"
+run_ph_layer_plots = "aen_replication.pipelines.run_ph_layer_plots:main"
+run_full_ph_distance = "aen_replication.pipelines.run_full_ph_distance:main"
+run_topology_classifier = "aen_replication.pipelines.run_topology_classifier:main"
+run_independent_topology_classifier = "aen_replication.pipelines.run_independent_topology_classifier:main"
+run_token_cloud_topology_classifier = "aen_replication.pipelines.run_token_cloud_topology_classifier:main"

@@ -1,0 +1,8 @@
+extends: ./llama_steering_paper_style_openai_ibm.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama31_steering_paper_style_openai_mean_diff_raw
+
+steering:
+  artifact_dir: artifacts/steering_paper_style_openai_mean_diff_raw
+  direction_method: mean_diff_raw

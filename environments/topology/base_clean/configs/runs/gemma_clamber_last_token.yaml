@@ -1,0 +1,4 @@
+extends: ./gemma_clamber_pca16.yaml
+
+extraction:
+  readouts: [last_token]

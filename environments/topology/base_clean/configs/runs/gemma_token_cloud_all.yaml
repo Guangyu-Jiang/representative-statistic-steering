@@ -1,0 +1,32 @@
+extends: ../default.yaml
+
+model:
+  profile_path: configs/models/gemma7b_it.yaml
+
+token_cloud_topology_classifier:
+  enabled: true
+  output_dir: artifacts/token_cloud_topology_classifier_all_datasets
+  datasets: [ambigqa, situatedqa]
+  text_column: text
+  use_chat_template: false
+  system_prompt: null
+  batch_size: 8
+  max_length: 64
+  parallel_jobs: 12
+  candidate_layers: [0, 14, 27]
+  layer_selection_strategy: evenly_spaced
+  max_candidate_layers: 3
+  drop_special_tokens: true
+  pca_fit_token_cap: 16000
+  pca_components: 8
+  pca_whiten: false
+  topology_components: 6
+  prototype_token_cap: 192
+  distance_metric: euclidean
+  betti_grid_size: 24
+  persistence_image_grid_side: 3
+  maxdim: 1
+  coeff: 2
+  val_fraction: 0.2
+  multilayer_enabled: true
+  multilayer_top_k: 2

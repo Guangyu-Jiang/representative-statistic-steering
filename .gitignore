@@ -1,15 +1,48 @@
-.DS_Store
-.env
-.env.*
-.pytest_cache/
-.venv/
+# Python
 __pycache__/
 *.py[cod]
-*.log
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
 
-# Local datasets, model weights, third-party checkouts, and generated results.
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Materialized experiment workspaces
+workspaces/
+/external/CAA/
+/external/illposedness_topology/
+/environments/topology/base/
+/environments/topology/overlay/docs/STEERING_EXPERIMENTS.md
+
+# Models, datasets, caches, and generated outputs
 artifacts/
 checkpoints/
-data/
-external/
+features/
 outputs/
+results/
+/data/
+logs/
+wandb/
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.parquet
+*.pkl
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/

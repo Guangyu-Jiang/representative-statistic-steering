@@ -1,0 +1,79 @@
+[
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 15.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 8.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 8.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 4.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 12.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 12.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 4.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 16.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 16.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 4.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 16.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.0,
+    "relative_cap": 4.0
+  },
+  {
+    "method": "targeted_iti",
+    "num_heads": 48,
+    "alpha": 16.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "targeted_iti",
+    "num_heads": 48,
+    "alpha": 16.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 4.0
+  }
+]

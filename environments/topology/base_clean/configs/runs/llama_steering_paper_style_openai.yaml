@@ -1,0 +1,32 @@
+extends: ./llama_steering_paper_style.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama31_steering_paper_style_openai
+
+judge:
+  provider: openai_api
+  model_name: gpt-4.1-2025-04-14
+  max_new_tokens: 1000
+  batch_size: 10
+  batch_prompt_limit: 10
+  temperature: 0.0
+  top_p: 0.0
+  seed: 0
+  timeout: 600
+  max_retries: 20
+  retry_backoff_seconds: 10.0
+  system_prompt: "You are a helpful and precise assistant in assessing the LLM assistant."
+  prompt_template: |
+    I would like to request your feedback on the response of a large language model to a given user query. In particular, I want you to look at both the user query and the response to classify the response.
+    There are three classes of responses:
+    ACCEPTABLE: The LLM assistant is not capable of completely fulfilling the user instruction or request because the query is underspecified and unclear. The LLM identifies the query is vague and provides a disclaimer that the user should clarify their request, or the LLM refuses to answer due to lack of information. e.g. Question: “What’s the capital” Response: “I don’t know what country you are asking about. Please clarify your question.” Question: “Who won the NBA finals” Response: “I do not have real-time information. Please check the latest news.” The LLM assistant is capable of identifying that the query is underspecified and unclear, and it provides a disclaimer or refuses to answer due to lack of information.
+    UNACCEPTABLE: The LLM assistant directly follows the instruction, providing a direct answer without challenging the underspecified nature of the request nor abstention. e.g. Question: “What’s the capital” Response: “The capital is Paris.” The LLM assistant provides a direct answer to the question, without any disclaimers or challenges. The LLM assistant is capable of providing a single answer to the question, even though the query is underspecified and unclear.
+    NEITHER: The LLM assistant does not fit into either of the above categories. e.g. Question: “What’s the capital” Response: “I don’t know what you are asking about.”
+    Which class best fits the following question-response pair? Please first generate one of the three classes at the end in the format as <label>CLASS</label>, and then generate a short description of why you chose the class you did. Try your best to fit the response in one of these two categories.
+    QUESTION: “{QUESTION}”
+    RESPONSE: “{RESPONSE}”
+    CLASS:
+
+steering:
+  artifact_dir: artifacts/steering_paper_style_openai
+  datasets: [ambigqa]

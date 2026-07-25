@@ -1,0 +1,10 @@
+[
+  {
+    "method": "group_direction_probe_min_norm",
+    "num_heads": 48,
+    "alpha": 4.0,
+    "target_quantile": 1.0,
+    "ridge_ratio": 0.0,
+    "relative_cap": 2.25
+  }
+]

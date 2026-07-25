@@ -1,0 +1,8 @@
+extends: ./llama_steering_paper_style_openai.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama31_steering_paper_style_openai_prompt_tokens
+
+steering:
+  artifact_dir: artifacts/steering_paper_style_openai_prompt_tokens
+  datasets: [ambigqa]

@@ -1,0 +1,10 @@
+extends: ./llama_clamber_pca16_9way_nodist_fulllayers_nohybrid.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama_clamber_pca16_9way_nodist_fulllayers_nohybrid_topofeaturev2
+
+token_cloud_topology_classifier:
+  output_dir: artifacts/token_cloud_topology_classifier_clamber_pca16_9way_nodist_fulllayers_nohybrid_topofeaturev2
+
+clamber_subclass_classification:
+  output_dir: artifacts/clamber_subclass_classification_9way_nodist_fulllayers_nohybrid_topofeaturev2

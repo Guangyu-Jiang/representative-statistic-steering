@@ -1,0 +1,353 @@
+seed: 13
+
+runtime:
+  log_level: INFO
+  log_dir: artifacts/logs
+  command_history_path: artifacts/reports/commands.log
+
+data:
+  pair_output_dir: data/processed
+  clear_selection: random_seeded
+  split:
+    train_pairs: 400
+    test_pairs: 1000
+  ambigqa:
+    train_path: data/raw/ambigqa_official/train_light.json
+    dev_path: data/raw/ambigqa_official/dev_light.json
+  situatedqa:
+    temp_paths:
+      - external/SituatedQA/data/raw_data/temp.train.jsonl
+      - external/SituatedQA/data/raw_data/temp.dev.jsonl
+      - external/SituatedQA/data/raw_data/temp.test.jsonl
+    geo_paths:
+      - external/SituatedQA/data/raw_data/geo.train.jsonl
+      - external/SituatedQA/data/raw_data/geo.dev.jsonl
+      - external/SituatedQA/data/raw_data/geo.test.jsonl
+
+model:
+  profile_path: configs/models/llama31_8b_instruct.yaml
+
+extraction:
+  datasets: [ambigqa, situatedqa]
+  readouts: [mean_pool]
+  default_layer: 14
+  layers: auto
+  batch_size: 4
+  max_length: 96
+  text_column: text
+  use_chat_template: true
+  system_prompt: null
+  cache_dir: artifacts/hidden_states
+  local_files_only: true
+  use_mixed_precision: false
+
+probe:
+  artifact_dir: artifacts/probes
+  penalty: l2
+  solver: liblinear
+  C: 1.0
+  class_weight: balanced
+  max_iter: 4000
+  standardize: false
+  perturb_top_k: [1, 2, 3, 5]
+  perturb_sigma: 1.0
+  perturb_trials: 5
+
+tda_export:
+  enabled: true
+  output_dir: artifacts/features
+  datasets: [ambigqa, situatedqa]
+  readout: mean_pool
+  subspaces: [aed_final, top_20, top_50, top_100, nonzero_support]
+  support_probe:
+    penalty: l1
+    solver: liblinear
+    C: 1.0
+    class_weight: balanced
+    max_iter: 4000
+    standardize: true
+  reduction: pca
+  pca_components: 2
+  layer_features_filename: layerwise_ambiguity_features.parquet
+  trajectories_filename: ambiguity_trajectories.parquet
+  trajectory_summary_filename: ambiguity_trajectory_summary.parquet
+  layer_summary_filename: layerwise_aen_summary.parquet
+  cross_dataset_overlap_filename: cross_dataset_layer_overlap.parquet
+  metadata_filename: tda_export_metadata.json
+
+persistent_homology:
+  enabled: true
+  output_dir: artifacts/topology
+  datasets: [ambigqa, situatedqa]
+  readout: mean_pool
+  subspaces: [aed_final, top_20, top_50, top_100, nonzero_support]
+  split: test
+  sample_n_per_group: 160
+  min_points: 24
+  maxdim: 1
+  coeff: 2
+  standardize: true
+  summary_filename: persistent_homology_summary.parquet
+  diagrams_filename: persistent_homology_diagrams.parquet
+  subspace_comparison_filename: persistent_homology_subspace_comparison.parquet
+  report_filename: persistent_homology_summary.md
+  metadata_filename: persistent_homology_metadata.json
+
+focused_persistent_homology:
+  enabled: true
+  output_dir: artifacts/topology_focused
+  focus_subspaces: [top_20, top_50, top_100]
+  compare_subspaces: [aed_final, top_20, top_50, top_100]
+  plot_subspaces: [top_20, top_50, top_100]
+  window_size: 5
+  barcode_top_n: 25
+  distance_summary_filename: focused_persistent_homology_distances.parquet
+  aggregate_filename: focused_persistent_homology_aggregate.parquet
+  window_filename: focused_persistent_homology_window.parquet
+  report_filename: focused_persistent_homology_summary.md
+  metadata_filename: focused_persistent_homology_metadata.json
+
+ph_visualization:
+  enabled: true
+  output_dir: artifacts/topology_visualizations
+  datasets: [ambigqa, situatedqa]
+  subspaces: [aed_final, top_20, top_50, top_100, nonzero_support]
+  aggregate_filename: ph_label_comparison_aggregate.parquet
+  report_filename: ph_label_comparison_summary.md
+  metadata_filename: ph_label_comparison_metadata.json
+
+ph_descriptors:
+  enabled: true
+  output_dir: artifacts/topology_descriptors
+  datasets: [ambigqa, situatedqa]
+  subspaces: [top_20, top_50, top_100, nonzero_support]
+  grid_size: 64
+  summary_filename: ph_descriptor_summary.parquet
+  curves_filename: ph_betti_curves.parquet
+  comparison_filename: ph_descriptor_comparison.parquet
+  aggregate_filename: ph_descriptor_aggregate.parquet
+  report_filename: ph_descriptor_summary.md
+  metadata_filename: ph_descriptor_metadata.json
+
+ph_layer_plots:
+  enabled: true
+  output_dir: artifacts/topology_layers
+  datasets: [ambigqa, situatedqa]
+  subspaces: [top_20, top_50, top_100]
+  homology_dims: [0, 1]
+  barcode_top_n: 25
+  report_filename: ph_layer_plots_summary.md
+  metadata_filename: ph_layer_plots_metadata.json
+
+full_ph_distance:
+  enabled: true
+  output_dir: artifacts/topology_all_layers
+  datasets: [ambigqa, situatedqa]
+  compare_subspaces: [top_20, top_50, top_100, nonzero_support]
+  distance_summary_filename: ph_distance_all_layers.parquet
+  aggregate_filename: ph_distance_all_layers_aggregate.parquet
+  report_filename: ph_distance_all_layers_summary.md
+  metadata_filename: ph_distance_all_layers_metadata.json
+
+topology_classifier:
+  enabled: true
+  output_dir: artifacts/topology_classifier
+  datasets: [ambigqa, situatedqa]
+  readout: mean_pool
+  candidate_subspaces: [top_20, top_50, top_100, nonzero_support]
+  candidate_layers: auto
+  layer_selection_strategy: ph_distance_peak
+  max_candidate_layers: 6
+  ph_distance_dir: artifacts/topology_all_layers
+  ph_distance_filename: ph_distance_all_layers.parquet
+  ph_distance_homology_dim: 1
+  ph_distance_metric: wasserstein_distance
+  ph_distance_subspaces: [top_20, top_50, top_100, nonzero_support]
+  val_fraction: 0.2
+  neighborhood_k: 24
+  coordinate_columns: [z_0, z_1, signed_distance]
+  standardize_coordinates: true
+  prototype_sample_n: 96
+  betti_grid_size: 32
+  maxdim: 1
+  coeff: 2
+  classifier:
+    penalty: l2
+    solver: liblinear
+    C: 1.0
+    class_weight: balanced
+    max_iter: 4000
+    standardize: true
+  feature_table_filename: topology_classifier_features.parquet
+  candidate_metrics_filename: topology_classifier_candidate_metrics.parquet
+  final_metrics_filename: topology_classifier_final_metrics.parquet
+  selected_candidates_filename: topology_classifier_selected_candidates.parquet
+  report_filename: topology_classifier_summary.md
+  metadata_filename: topology_classifier_metadata.json
+
+independent_topology_classifier:
+  enabled: true
+  output_dir: artifacts/independent_topology_classifier
+  datasets: [ambigqa, situatedqa]
+  readout: mean_pool
+  parallel_jobs: 16
+  candidate_layers: auto
+  layer_selection_strategy: evenly_spaced
+  max_candidate_layers: 8
+  val_fraction: 0.2
+  pca_components: 8
+  geometry_components: 8
+  topology_components: 6
+  standardize_hidden_states: true
+  standardize_reduced_coordinates: true
+  pca_whiten: false
+  neighborhood_k: 24
+  prototype_sample_n: 96
+  betti_grid_size: 32
+  persistence_image_grid_side: 4
+  maxdim: 1
+  coeff: 2
+  multilayer_enabled: true
+  multilayer_top_k: 3
+  classifier:
+    penalty: l2
+    solver: liblinear
+    C: 1.0
+    class_weight: balanced
+    max_iter: 4000
+    standardize: true
+  feature_table_filename: independent_topology_classifier_features.parquet
+  candidate_metrics_filename: independent_topology_classifier_candidate_metrics.parquet
+  final_metrics_filename: independent_topology_classifier_final_metrics.parquet
+  selected_candidates_filename: independent_topology_classifier_selected_candidates.parquet
+  report_filename: independent_topology_classifier_summary.md
+  metadata_filename: independent_topology_classifier_metadata.json
+
+token_cloud_topology_classifier:
+  enabled: false
+  output_dir: artifacts/token_cloud_topology_classifier
+  datasets: [ambigqa]
+  text_column: text
+  use_chat_template: false
+  system_prompt: null
+  batch_size: 4
+  max_length: 96
+  parallel_jobs: 16
+  candidate_layers: [0, 14, 31]
+  layer_selection_strategy: evenly_spaced
+  max_candidate_layers: 3
+  drop_special_tokens: true
+  pca_fit_token_cap: 24000
+  pca_components: 8
+  pca_whiten: false
+  topology_components: 6
+  prototype_token_cap: 128
+  distance_feature_mode: knn_class
+  distance_feature_k: 8
+  distance_feature_chunk_size: 24
+  distance_metric: euclidean
+  betti_grid_size: 32
+  persistence_image_grid_side: 4
+  maxdim: 1
+  coeff: 2
+  val_fraction: 0.2
+  multilayer_enabled: true
+  multilayer_top_k: 2
+  classifier:
+    penalty: l2
+    solver: liblinear
+    C: 1.0
+    class_weight: balanced
+    max_iter: 4000
+    standardize: true
+  feature_table_filename: token_cloud_topology_features.parquet
+  candidate_metrics_filename: token_cloud_topology_candidate_metrics.parquet
+  final_metrics_filename: token_cloud_topology_final_metrics.parquet
+  selected_candidates_filename: token_cloud_topology_selected_candidates.parquet
+  report_filename: token_cloud_topology_summary.md
+  metadata_filename: token_cloud_topology_metadata.json
+  visualization_enabled: true
+  plots_dirname: plots
+  visualization_report_filename: token_cloud_topology_visualizations.md
+
+mapper_analysis:
+  enabled: true
+  output_dir: artifacts/mapper
+  datasets: [ambigqa, situatedqa]
+  split: test
+  subspaces: [top_20, top_50, top_100]
+  lenses: [signed_distance, z_0]
+  n_intervals: [6, 8]
+  overlaps: [0.3, 0.5]
+  dbscan_eps: 0.35
+  min_samples: 8
+  plot_lens: signed_distance
+  plot_subspaces: [top_20, top_50, top_100]
+  stats_filename: mapper_stats.parquet
+  nodes_filename: mapper_nodes.parquet
+  edges_filename: mapper_edges.parquet
+  comparison_filename: mapper_comparison.parquet
+  aggregate_filename: mapper_aggregate.parquet
+  sensitivity_filename: mapper_sensitivity.parquet
+  report_filename: mapper_summary.md
+  metadata_filename: mapper_metadata.json
+
+reports:
+  output_dir: artifacts/reports
+  summary_path: artifacts/reports/summary.md
+
+paper_audit:
+  paper_pdf_path: 2025.emnlp-main.813.pdf
+  output_dir: artifacts/reports/paper_audit
+
+triviaqa_eval:
+  dataset_id: trivia_qa
+  config_name: rc.nocontext
+  split: validation
+  sample_n: 1000
+  processed_path: data/processed/triviaqa_eval.parquet
+  readout: mean_pool
+  train_datasets: [ambigqa, situatedqa]
+  summary_filename: triviaqa_aen_false_positive.json
+  predictions_filename: triviaqa_aen_false_positive.parquet
+
+generation:
+  max_new_tokens: 64
+  prompt_max_length: 2048
+  temperature: 0.1
+  do_sample: true
+  top_p: 0.95
+  batch_size: 8
+  use_chat_template: true
+  system_prompt: null
+  local_files_only: true
+
+baselines:
+  artifact_dir: artifacts/baselines
+  datasets: [ambigqa, situatedqa]
+  infogain_threshold: 0.5
+
+judge:
+  provider: local_llm
+  model_name: Qwen/Qwen2.5-72B-Instruct
+  tokenizer_name: Qwen/Qwen2.5-72B-Instruct
+  trust_remote_code: false
+  local_files_only: true
+  torch_dtype: bfloat16
+  device_map: auto
+  use_chat_template: true
+  max_new_tokens: 12
+  batch_size: 8
+  system_prompt: null
+
+steering:
+  artifact_dir: artifacts/steering
+  datasets: [ambigqa, situatedqa]
+  prompt_suffix: "\nAnswer:"
+  build_abstain_n: 100
+  build_clear_n: 100
+  eval_direct_answer_n: 500
+  eval_consistency_n: 500
+  eval_abstain_n: 500
+  alpha: 1.0
+  selection_strategies: [aens, top_50, top_100, full_vector]

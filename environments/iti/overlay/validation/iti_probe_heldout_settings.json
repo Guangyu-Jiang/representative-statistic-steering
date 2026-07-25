@@ -1,0 +1,10 @@
+[
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 16.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0,
+    "relative_cap": 4.0
+  }
+]

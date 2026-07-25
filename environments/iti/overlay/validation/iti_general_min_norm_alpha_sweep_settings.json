@@ -1,0 +1,172 @@
+[
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 2.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 4.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 6.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 8.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 10.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 12.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 14.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 16.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 18.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 22.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 24.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 26.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 28.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 30.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 32.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 34.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 36.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 38.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 40.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 8.0
+  },
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 15.0
+  }
+]

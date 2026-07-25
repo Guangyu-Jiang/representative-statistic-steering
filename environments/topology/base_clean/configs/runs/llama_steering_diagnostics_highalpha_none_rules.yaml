@@ -1,0 +1,20 @@
+extends: ./llama_steering_official_annotations.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama31_steering_diagnostics_highalpha_none_rules
+
+judge:
+  provider: rules
+
+steering_diagnostics:
+  artifact_dir: artifacts/reports/steering_diagnostics_highalpha_none_rules
+  baseline_artifact_dir: artifacts/steering_official_annotations
+  dataset: ambigqa
+  strategy: aens
+  build_abstain_n: 100
+  build_clear_n: 100
+  eval_direct_answer_n: 500
+  alpha_values: [16.0, 32.0, 64.0, 128.0]
+  renorm_modes: [none]
+  compare_alpha: 64.0
+  compare_renorm_mode: none

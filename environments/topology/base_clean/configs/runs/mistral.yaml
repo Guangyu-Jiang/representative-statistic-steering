@@ -1,0 +1,4 @@
+extends: ../default.yaml
+
+model:
+  profile_path: configs/models/mistral7b_instruct_v03.yaml

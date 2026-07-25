@@ -1,0 +1,11 @@
+extends: ./gemma_steering_openai_ibm_80_20_clamber_aligned_mean_diff_raw.yaml
+
+runtime:
+  log_dir: artifacts/logs/gemma_steering_clamber_topo_local
+
+data:
+  pair_output_dir: data/processed
+
+steering:
+  artifact_dir: artifacts/steering_topology_conditioned_local_mean_diff_raw_clamber_norm_k_sweep
+  datasets: [clamber]

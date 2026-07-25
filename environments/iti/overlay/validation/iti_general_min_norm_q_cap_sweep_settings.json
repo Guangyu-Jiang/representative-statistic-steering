@@ -1,0 +1,524 @@
+[
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 0.75
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.25
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 1.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.0
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 2.5
+  },
+  {
+    "method": "aggregate_com",
+    "num_heads": 48,
+    "alpha": 20.0,
+    "target_quantile": 0.95,
+    "ridge_ratio": 0.1,
+    "relative_cap": 3.0
+  },
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 8.0
+  },
+  {
+    "method": "fixed_com",
+    "num_heads": 48,
+    "alpha": 15.0
+  }
+]

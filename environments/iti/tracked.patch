@@ -1,0 +1,301 @@
+diff --git a/README.md b/README.md
+index 91d3a49..6b03286 100644
+--- a/README.md
++++ b/README.md
+@@ -67,6 +67,13 @@ See `test.ipynb`.
+ 
+ This repository provides the code for the paper [Inference-Time Intervention: Eliciting Truthful Answers from a Language Model](https://arxiv.org/abs/2306.03341). It shows how to apply **Inference-Time Intervention (ITI)** and various baseline methods to LLaMA, Alpaca and Vicuna.  
+ 
++This checkout also includes an API-free, causal attention-head perturbation
++extension. See [`LOCAL_REPRODUCTION.md`](LOCAL_REPRODUCTION.md) for runnable
++commands, [`validation/CAUSAL_HEAD_PERTURBATION.md`](validation/CAUSAL_HEAD_PERTURBATION.md)
++for the method, and
++[`validation/iti_attention_head_results.md`](validation/iti_attention_head_results.md)
++for held-out and multi-seed results.
++
+ Some of the code is from [user-friendly llama](https://github.com/ypeleg/llama), thanks to Yam Peleg and Jason Phang. David Bau's [baukit](https://github.com/davidbau/baukit) comes in handy for implementing ITI, which we strongly recommend to anyone working on the internals of neural networks. [Kenneth Li](https://likenneth.github.io/) and [Oam Patel](https://github.com/0amp) made equal contributions to this work.  
+ 
+ ## Abstract
+diff --git a/get_activations/get_activations.py b/get_activations/get_activations.py
+index e6fed18..e3d7837 100644
+--- a/get_activations/get_activations.py
++++ b/get_activations/get_activations.py
+@@ -1,5 +1,6 @@
+ # Pyvene method of getting activations
+-import os
++import json
++from pathlib import Path
+ import torch
+ from datasets import load_dataset
+ from tqdm import tqdm
+@@ -8,14 +9,12 @@ import pickle
+ import sys
+ sys.path.append('../')
+ 
+-import llama
+-import pickle
+ import argparse
+-from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
++from transformers import AutoTokenizer, AutoModelForCausalLM
+ 
+ # Specific pyvene imports
+ from utils import get_llama_activations_pyvene, tokenized_tqa, tokenized_tqa_gen, tokenized_tqa_gen_end_q
+-from interveners import wrapper, Collector, ITI_Intervener
++from interveners import wrapper, Collector
+ import pyvene as pv
+ 
+ HF_NAMES = {
+@@ -42,14 +41,37 @@ def main():
+     parser = argparse.ArgumentParser()
+     parser.add_argument('--model_name', type=str, default='llama_7B')
+     parser.add_argument('--model_prefix', type=str, default='', help='prefix of model name')
++    parser.add_argument(
++        '--model_path',
++        type=str,
++        default=None,
++        help='optional local/Hugging Face model path overriding HF_NAMES',
++    )
+     parser.add_argument('--dataset_name', type=str, default='tqa_mc2')
+     parser.add_argument('--device', type=int, default=0)
++    parser.add_argument('--max_prompts', type=int, default=None, help='optional smoke-test limit')
++    parser.add_argument('--output_suffix', type=str, default='', help='suffix for nonstandard feature files')
++    parser.add_argument('--local_files_only', action='store_true')
++    parser.add_argument(
++        '--head_wise_only',
++        action='store_true',
++        help='skip the redundant layer-wise activation artifact',
++    )
+     args = parser.parse_args()
+ 
+-    model_name_or_path = HF_NAMES[args.model_prefix + args.model_name]
++    model_name_or_path = args.model_path or HF_NAMES[args.model_prefix + args.model_name]
+ 
+-    tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
+-    model = AutoModelForCausalLM.from_pretrained(model_name_or_path, low_cpu_mem_usage=True, torch_dtype=torch.float16, device_map="auto")
++    tokenizer = AutoTokenizer.from_pretrained(
++        model_name_or_path,
++        local_files_only=args.local_files_only,
++    )
++    model = AutoModelForCausalLM.from_pretrained(
++        model_name_or_path,
++        local_files_only=args.local_files_only,
++        low_cpu_mem_usage=True,
++        torch_dtype=torch.float16,
++        device_map="auto",
++    )
+     device = "cuda"
+ 
+     if args.dataset_name == "tqa_mc2": 
+@@ -67,11 +89,21 @@ def main():
+     print("Tokenizing prompts")
+     if args.dataset_name == "tqa_gen" or args.dataset_name == "tqa_gen_end_q": 
+         prompts, labels, categories = formatter(dataset, tokenizer)
+-        with open(f'../features/{args.model_name}_{args.dataset_name}_categories.pkl', 'wb') as f:
+-            pickle.dump(categories, f)
+     else: 
+         prompts, labels = formatter(dataset, tokenizer)
+ 
++    if args.max_prompts is not None:
++        prompts = prompts[:args.max_prompts]
++        labels = labels[:args.max_prompts]
++        if args.dataset_name == "tqa_gen" or args.dataset_name == "tqa_gen_end_q":
++            categories = categories[:args.max_prompts]
++
++    output_stem = Path(f'../features/{args.model_name}_{args.dataset_name}{args.output_suffix}')
++    output_stem.parent.mkdir(parents=True, exist_ok=True)
++    if args.dataset_name == "tqa_gen" or args.dataset_name == "tqa_gen_end_q":
++        with open(f'{output_stem}_categories.pkl', 'wb') as f:
++            pickle.dump(categories, f)
++
+     collectors = []
+     pv_config = []
+     for layer in range(model.config.num_hidden_layers): 
+@@ -89,17 +121,31 @@ def main():
+     print("Getting activations")
+     for prompt in tqdm(prompts):
+         layer_wise_activations, head_wise_activations, _ = get_llama_activations_pyvene(collected_model, collectors, prompt, device)
+-        all_layer_wise_activations.append(layer_wise_activations[:,-1,:].copy())
++        if not args.head_wise_only:
++            all_layer_wise_activations.append(layer_wise_activations[:,-1,:].copy())
+         all_head_wise_activations.append(head_wise_activations.copy())
+ 
+     print("Saving labels")
+-    np.save(f'../features/{args.model_name}_{args.dataset_name}_labels.npy', labels)
++    np.save(f'{output_stem}_labels.npy', labels)
+ 
+-    print("Saving layer wise activations")
+-    np.save(f'../features/{args.model_name}_{args.dataset_name}_layer_wise.npy', all_layer_wise_activations)
++    if not args.head_wise_only:
++        print("Saving layer wise activations")
++        np.save(f'{output_stem}_layer_wise.npy', all_layer_wise_activations)
+     
+     print("Saving head wise activations")
+-    np.save(f'../features/{args.model_name}_{args.dataset_name}_head_wise.npy', all_head_wise_activations)
++    np.save(f'{output_stem}_head_wise.npy', all_head_wise_activations)
++
++    metadata = {
++        'model_name': args.model_name,
++        'model_path': str(model_name_or_path),
++        'dataset_name': args.dataset_name,
++        'num_prompts': len(prompts),
++        'num_layers': model.config.num_hidden_layers,
++        'num_attention_heads': model.config.num_attention_heads,
++        'hidden_size': model.config.hidden_size,
++        'head_wise_only': args.head_wise_only,
++    }
++    Path(f'{output_stem}_metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
+ 
+ if __name__ == '__main__':
+     main()
+diff --git a/utils.py b/utils.py
+index 301d7c0..568d3bb 100644
+--- a/utils.py
++++ b/utils.py
+@@ -2,7 +2,9 @@
+ 
+ import os
+ import sys
+-sys.path.insert(0, "TruthfulQA")
++from pathlib import Path
++
++sys.path.insert(0, str(Path(__file__).resolve().parent / "TruthfulQA"))
+ 
+ import torch
+ import torch.nn as nn
+@@ -16,7 +18,10 @@ import pandas as pd
+ import warnings
+ from einops import rearrange
+ from transformers import AutoTokenizer, AutoModelForCausalLM
+-from baukit import Trace, TraceDict
++try:
++    from baukit import Trace, TraceDict
++except ImportError:
++    Trace = TraceDict = None
+ import sklearn
+ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+ from sklearn.linear_model import LogisticRegression
+@@ -76,6 +81,30 @@ def format_truthfulqa_end_q(question, choice, rand_question):
+     return f"Q: {question} A: {choice} Q: {rand_question}"
+ 
+ 
++def load_truthfulqa_frame():
++    """Build the 817-row evaluation frame used by the activation dataset."""
++    generation = load_dataset('truthfulqa/truthful_qa', 'generation')['validation']
++    multiple_choice = load_dataset('truthfulqa/truthful_qa', 'multiple_choice')['validation']
++    frame = pd.DataFrame({
++        'Type': generation['type'],
++        'Category': generation['category'],
++        'Question': [question.strip() for question in generation['question']],
++        'Best Answer': generation['best_answer'],
++        'Correct Answers': ['; '.join(answers) for answers in generation['correct_answers']],
++        'Incorrect Answers': ['; '.join(answers) for answers in generation['incorrect_answers']],
++        'Source': generation['source'],
++    })
++    order = {question.strip(): index for index, question in enumerate(multiple_choice['question'])}
++    frame = frame.sort_values(
++        by='Question',
++        key=lambda values: values.map(order),
++    ).reset_index(drop=True)
++    expected = [question.strip() for question in multiple_choice['question']]
++    if list(frame['Question']) != expected:
++        raise ValueError('TruthfulQA generation and multiple-choice question sets differ')
++    return frame
++
++
+ def tokenized_tqa(dataset, tokenizer): 
+ 
+     all_prompts = []
+@@ -519,7 +548,7 @@ def run_kl_wrt_orig(model_key, model=None, tokenizer=None, device='cuda', interv
+ 
+     return np.mean(kl_divs)
+ 
+-def alt_tqa_evaluate(models, metric_names, input_path, output_path, summary_path, device='cpu', verbose=False, preset='qa', interventions={}, intervention_fn=None, cache_dir=None, separate_kl_device=None, orig_model=None, instruction_prompt="default", many_shot_prefix=None, judge_name=None, info_name=None): 
++def alt_tqa_evaluate(models, metric_names, input_path, output_path, summary_path, device='cpu', verbose=False, preset='qa', interventions={}, intervention_fn=None, cache_dir=None, separate_kl_device=None, orig_model=None, instruction_prompt="default", many_shot_prefix=None, judge_name=None, info_name=None, compute_distribution_metrics=True):
+     """
+     Inputs:
+     models: a dictionary of the form {model_name: model} where model is a HF transformer # TODO: doesn't work with models other than llama right now
+@@ -534,9 +563,11 @@ def alt_tqa_evaluate(models, metric_names, input_path, output_path, summary_path
+     """
+     questions = utilities.load_questions(filename=input_path)
+ 
+-    print("ASSUMES OPENAI_API_KEY ENVIRONMENT VARIABLE IS SET")
+-    import os
+-    openai.api_key = os.environ.get('OPENAI_API_KEY')
++    if 'judge' in metric_names or 'info' in metric_names:
++        raise ValueError(
++            "The original judge/info metrics call the OpenAI API. Use the local judge "
++            "runner or evaluate with --metrics mc."
++        )
+     
+     for mdl in models.keys(): 
+ 
+@@ -568,7 +599,7 @@ def alt_tqa_evaluate(models, metric_names, input_path, output_path, summary_path
+             assert models[mdl] is not None, 'must provide llama model'
+             llama_model = models[mdl]
+             llama_tokenizer = AutoTokenizer.from_pretrained(ENGINE_MAP[mdl])
+-            if 'judge' in metric_names or 'info' in metric_names:
++            if 'generate' in metric_names:
+                 questions = tqa_run_answers(questions, ENGINE_MAP[mdl], mdl, preset, model=llama_model, tokenizer=llama_tokenizer,
+                                 device=device, cache_dir=cache_dir, verbose=verbose,
+                                 interventions=interventions, intervention_fn=intervention_fn, instruction_prompt=instruction_prompt, many_shot_prefix=many_shot_prefix)
+@@ -607,7 +638,7 @@ def alt_tqa_evaluate(models, metric_names, input_path, output_path, summary_path
+     for model_key in models.keys(): 
+ 
+         for metric in metric_names: 
+-            if metric == 'mc':
++            if metric in ['mc', 'generate']:
+                 continue
+             if metric == 'bleurt':
+                 try:
+@@ -639,7 +670,7 @@ def alt_tqa_evaluate(models, metric_names, input_path, output_path, summary_path
+ 
+     # format and print basic results
+     results = format_frame(questions)
+-    results = results.mean(axis=0)
++    results = results.mean(axis=0, numeric_only=True)
+     results = results.reset_index().rename(columns={'level_0': 'Model',
+                                                     'level_1': 'Metric',
+                                                     0: 'Value'})
+@@ -652,21 +683,21 @@ def alt_tqa_evaluate(models, metric_names, input_path, output_path, summary_path
+                                               'GPT-judge acc',
+                                               'GPT-info acc'])]
+     results = pd.pivot_table(results, 'Value', 'Model', 'Metric')
++    if results.empty:
++        results = pd.DataFrame(index=list(models.keys()))
+ 
+-    # calculate cross entropy loss on owt and kl wrt to original unedited on owt
+-    results['CE Loss'] = np.nan
+-    results['KL wrt Orig'] = np.nan
++    if compute_distribution_metrics:
++        # calculate cross entropy loss on OWT and KL wrt the original model on OWT
++        results['CE Loss'] = np.nan
++        results['KL wrt Orig'] = np.nan
+ 
+-    for model_key in models.keys(): 
+-        # if model_key not in questions.columns:
+-        #     warnings.warn("Answers missing for {0}!".format(model_key), stacklevel=2)
+-        #     continue
+-        if 'llama' in model_key or 'alpaca' in model_key or 'vicuna' in model_key:
+-            ce_loss = run_ce_loss(model_key, model=llama_model, tokenizer=llama_tokenizer, device=device, interventions=interventions, intervention_fn=intervention_fn)
+-            kl_wrt_orig = run_kl_wrt_orig(model_key, model=llama_model, tokenizer=llama_tokenizer, device=device, interventions=interventions, intervention_fn=intervention_fn, separate_kl_device=separate_kl_device, orig_model=orig_model)
++        for model_key in models.keys():
++            if 'llama' in model_key or 'alpaca' in model_key or 'vicuna' in model_key:
++                ce_loss = run_ce_loss(model_key, model=llama_model, tokenizer=llama_tokenizer, device=device, interventions=interventions, intervention_fn=intervention_fn)
++                kl_wrt_orig = run_kl_wrt_orig(model_key, model=llama_model, tokenizer=llama_tokenizer, device=device, interventions=interventions, intervention_fn=intervention_fn, separate_kl_device=separate_kl_device, orig_model=orig_model)
+ 
+-        results.loc[model_key, 'CE Loss'] = ce_loss
+-        results.loc[model_key, 'KL wrt Orig'] = kl_wrt_orig
++                results.loc[model_key, 'CE Loss'] = ce_loss
++                results.loc[model_key, 'KL wrt Orig'] = kl_wrt_orig
+ 
+     # save results
+     results.to_csv(summary_path, index=False)
+@@ -745,7 +776,7 @@ def get_interventions_dict(top_heads, probes, tuning_activations, num_heads, use
+ def get_separated_activations(labels, head_wise_activations): 
+ 
+     # separate activations by question
+-    dataset=load_dataset('truthful_qa', 'multiple_choice')['validation']
++    dataset=load_dataset('truthfulqa/truthful_qa', 'multiple_choice')['validation']
+     actual_labels = []
+     for i in range(len(dataset)):
+         actual_labels.append(dataset[i]['mc2_targets']['labels'])

@@ -1,0 +1,7 @@
+name: google/gemma-7b-it
+tokenizer_name: google/gemma-7b-it
+trust_remote_code: false
+torch_dtype: bfloat16
+device: auto
+local_files_only: true
+model_class: causal_lm

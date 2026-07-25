@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "representative-statistic-steering"
-version = "0.1.0"
-description = "Minimum-norm activation steering for existing behavioral statistics"
+version = "0.2.0"
+description = "Target-conditioned perturbation steering for representative LLM statistics"
 requires-python = ">=3.10"
 dependencies = [
   "datasets",
@@ -15,6 +15,11 @@ dependencies = [
   "scikit-learn",
   "torch",
   "transformers",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
 ]
 
 [tool.setuptools.packages.find]

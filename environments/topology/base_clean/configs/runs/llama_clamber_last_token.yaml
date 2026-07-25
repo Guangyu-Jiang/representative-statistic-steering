@@ -1,0 +1,4 @@
+extends: ./llama_clamber.yaml
+
+extraction:
+  readouts: [last_token]

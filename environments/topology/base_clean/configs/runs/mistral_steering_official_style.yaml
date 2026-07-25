@@ -1,0 +1,37 @@
+extends: ./mistral.yaml
+
+runtime:
+  log_dir: artifacts/logs/mistral_v03_steering_official_style
+
+generation:
+  max_new_tokens: 100
+  prompt_max_length: 2048
+  temperature: 0.1
+  do_sample: true
+  top_p: null
+  top_k: null
+  batch_size: 8
+  use_chat_template: false
+  system_prompt: "You are a helpful assistant."
+
+judge:
+  provider: local_llm
+  model_name: Qwen/Qwen2.5-7B-Instruct
+  tokenizer_name: Qwen/Qwen2.5-7B-Instruct
+  max_new_tokens: 96
+  batch_size: 8
+  system_prompt: "You are a helpful assistant."
+  prompt_max_length: 2048
+
+official_style_steering:
+  output_dir: artifacts/steering_official_style
+  official_repo_root: /home/ubuntu/Internal_State_Detect_Ambiguity
+  model_key: mistral
+  datasets: [ambigqa, situatedqa]
+  layer: 14
+  extract_batch_size: 8
+  extract_max_length: 2048
+  build_sample_n: 0
+  eval_sample_n: 500
+  alpha: 1.0
+  selection_strategies: [aens, top_50, top_100, full_vector]

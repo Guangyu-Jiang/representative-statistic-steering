@@ -1,0 +1,13 @@
+name: repstat-core
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pytorch
+  - pytorch-cuda=12.1
+  - pip:
+      - -e .[dev]
+

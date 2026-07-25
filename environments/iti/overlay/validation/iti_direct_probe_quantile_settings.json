@@ -1,0 +1,51 @@
+[
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.5,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.6,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.7,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.75,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.8,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.85,
+    "ridge_ratio": 0.0
+  },
+  {
+    "method": "targeted_probe_iti",
+    "num_heads": 48,
+    "alpha": 1.0,
+    "target_quantile": 0.9,
+    "ridge_ratio": 0.0
+  }
+]

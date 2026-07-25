@@ -30,7 +30,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--model",
-        default="/home/ubuntu/.cache/huggingface/hub/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee",
+        default="NousResearch/Llama-2-7b-chat-hf",
     )
     parser.add_argument(
         "--classifier",

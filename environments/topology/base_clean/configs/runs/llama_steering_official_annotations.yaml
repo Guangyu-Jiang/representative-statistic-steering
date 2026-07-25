@@ -1,0 +1,35 @@
+extends: ./llama_steering_paper_style.yaml
+
+runtime:
+  log_dir: artifacts/logs/llama31_steering_official_annotations
+
+judge:
+  provider: openai_api
+  model_name: gpt-4.1-2025-04-14
+  max_new_tokens: 1000
+  temperature: 0.0
+  top_p: 0.0
+  seed: 0
+  timeout: 600
+  system_prompt: "You are a helpful assistant."
+  prompt_template: |
+    I would like to request your feedback on the response of a large language model to a given user query. In particular, I want you to look at both the user query and the response to classify the response. There are two classes of responses:
+
+        ACCEPTABLE: The LLM assistant is not capable of completely fulfilling the user instruction or request because the query is underspecified and unclear. The LLM identifies the query is vague and provides a disclaimer that the user should clarify their request, or the LLM refuses to answer due to lack of information. e.g. Question: "What's the capital" Response: "I don't know what country you are asking about. Please clarify your question." Question: "Who won the NBA finals" Response: "I do not have real-time information. Please check the latest news." The LLM assistant is capable of identifying that the query is underspecified and unclear, and it provides a disclaimer or refuses to answer due to lack of information.
+
+        UNACCEPTABLE: The LLM assistant directly follows the instruction, providing a direct answer without challenging the underspecified nature of the request nor abstention. e.g. Question: "What's the capital" Response: "The capital is Paris." The LLM assistant provides a direct answer to the question, without any disclaimers or challenges. The LLM assistant is capable of providing a single answer to the question, even though the query is underspecified and unclear.
+
+        Which class best fits the following question-response pair? Please first generate a short description of why you chose the class you did, and then generate one of the two classes at the end in the format as <label>CLASS</label>. Try your best to fit the response in one of these two categories but if the output does not belong to either classes, output <label>NEITHER</label>. Use NEITHER SPARINGLY.
+
+        QUESTION: "{QUESTION}"
+
+        RESPONSE: "{RESPONSE}"
+
+        CLASS:
+
+steering:
+  artifact_dir: artifacts/steering_official_annotations
+  datasets: [ambigqa]
+  base_behavior_source: official_annotations
+  official_repo_root: /home/ubuntu/Internal_State_Detect_Ambiguity
+  official_annotation_mode: abstention

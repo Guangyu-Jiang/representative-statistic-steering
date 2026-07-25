@@ -1,0 +1,7 @@
+extends: ./mistral.yaml
+
+runtime:
+  log_dir: artifacts/logs/mistral_v03_steering_exact
+
+judge:
+  batch_size: 4

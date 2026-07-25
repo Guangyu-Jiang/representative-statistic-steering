@@ -1,0 +1,46 @@
+extends: ./mistral_steering_paper_style.yaml
+
+runtime:
+  log_dir: artifacts/logs/mistral_steering_openai_ibm_80_20_clamber_aligned
+  command_history_path: artifacts/reports/commands_mistral_80_20_clamber_aligned.log
+
+data:
+  pair_output_dir: data/processed_80_20
+  split:
+    train_fraction: 0.8
+
+extraction:
+  cache_dir: artifacts/hidden_states_80_20
+
+probe:
+  artifact_dir: artifacts/probes_80_20
+
+reports:
+  summary_path: artifacts/reports/summary_mistral_80_20_clamber_aligned.md
+
+judge:
+  provider: openai_api
+  model_name: gpt-5.4-nano
+  max_new_tokens: 1000
+  batch_size: 10
+  batch_prompt_limit: 10
+  temperature: 0.0
+  top_p: 0.0
+  seed: 0
+  timeout: 600
+  max_retries: 20
+  retry_backoff_seconds: 10.0
+
+steering:
+  artifact_dir: artifacts/steering_openai_ibm_80_20_clamber_aligned
+  datasets: [ambigqa, situatedqa]
+  direction_method: pca_pairwise
+  direction_negative_source: direct_answer
+  direction_pairing: nearest
+  intervention_site: layer_input
+  steering_apply_on: prompt_and_decode
+  preserve_token_norm: false
+  selection_strategies: [aens, full_vector]
+  build_abstain_n: 300
+  build_direct_answer_n: 300
+  eval_direct_answer_n: 999999
