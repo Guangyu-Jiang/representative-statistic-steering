@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "representative-statistic-steering"
+version = "0.1.0"
+description = "Minimum-norm activation steering for existing behavioral statistics"
+requires-python = ">=3.10"
+dependencies = [
+  "datasets",
+  "numpy",
+  "pandas",
+  "pyyaml",
+  "scikit-learn",
+  "torch",
+  "transformers",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

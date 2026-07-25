@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+prefixes=(
+  "The chicken" "The country" "The painting" "The pizza" "The potato"
+  "The president" "The company" "The game" "The weather" "The conversation"
+)
+tags=(chicken country painting pizza potato president company game weather conversation)
+root="artifacts/pplm_sentiment/persistent_reference_heldout"
+mkdir -p "$root" artifacts/logs
+
+shard_dirs=()
+for index in "${!prefixes[@]}"; do
+  output="$root/${tags[$index]}"
+  shard_dirs+=("$output")
+  gpu=$((index % 3))
+  CUDA_VISIBLE_DEVICES="$gpu" PYTHONPATH=src python scripts/run_pplm_sentiment.py \
+    --output-dir "$output" \
+    --methods pplm \
+    --targets positive negative \
+    --prefixes "${prefixes[$index]}" \
+    --max-new-tokens 24 \
+    --seeds 11 22 33 \
+    --pplm-steps 10 \
+    --pplm-step-size 0.04 \
+    --maximum-relative-norm 0.10 \
+    --gm-scale 0.95 \
+    --persistent-cache \
+    --device cuda:0 \
+    > "artifacts/logs/pplm_persistent_reference_${tags[$index]}.log" 2>&1 &
+done
+wait
+
+merged="$root/merged"
+PYTHONPATH=src python scripts/merge_pplm_shards.py \
+  --shard-dir "${shard_dirs[@]}" \
+  --output-dir "$merged" \
+  --expected-count 60
+CUDA_VISIBLE_DEVICES=0 python scripts/evaluate_pplm_sentiment.py \
+  --input "$merged/generations.csv" \
+  --output-dir "$merged/external_eval" --device cuda:0

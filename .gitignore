@@ -1,0 +1,15 @@
+.DS_Store
+.env
+.env.*
+.pytest_cache/
+.venv/
+__pycache__/
+*.py[cod]
+*.log
+
+# Local datasets, model weights, third-party checkouts, and generated results.
+artifacts/
+checkpoints/
+data/
+external/
+outputs/
