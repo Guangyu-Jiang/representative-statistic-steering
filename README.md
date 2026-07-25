@@ -40,8 +40,8 @@ representative statistic.
 Clone with the pinned baselines:
 
 ```bash
-git clone --recurse-submodules git@github.com:Guangyu-Jiang/representative-statistic-perturbation-steering.git
-cd representative-statistic-perturbation-steering
+git clone --recurse-submodules git@github.com:Guangyu-Jiang/representative-statistic-steering.git
+cd representative-statistic-steering
 python -m pip install -e .
 pytest -q
 ```
